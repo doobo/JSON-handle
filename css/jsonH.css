@@ -8,9 +8,8 @@ em {font-style:normal;}
 hr {display:none;}
 
 body, button, input, textarea {
-	font-family:Tahoma,arial,simsun;
+	font-family:'microsoft yahei',Arial,sans-serif,Tahoma,arial,simsun;
 }
-
 
 html {
 	height:100%;
@@ -23,7 +22,7 @@ html {
 	box-sizing:border-box;
 	padding:1em 1em 2.8em;
 }
-#panel {padding:12px 2px 12px 12px;width:512px;height:80%;@min-height:300px;position:fixed;z-index:10;right:2em;top:1em;border:1px solid #C8C8C8;border-color:#e7e7f3 #c8c8d8 #c8c8d8 #e7e7f3;background:#f3f5ff;box-shadow:4px 4px 9px rgba(0, 0, 50, 0.2), -3px -3px 30px rgba(88, 88, 188, 0.1) inset;
+#panel {padding:12px 2px 12px 12px;width:512px;height:82%;@min-height:300px;position:fixed;z-index:10;right:2em;top:1em;border:1px solid #C8C8C8;border-color:#e7e7f3 #c8c8d8 #c8c8d8 #e7e7f3;background:#f3f5ff;box-shadow:4px 4px 9px rgba(0, 0, 50, 0.2), -3px -3px 30px rgba(88, 88, 188, 0.1) inset;
 	transition:
 		height .2s ease-out
 		,width .2s ease-out
