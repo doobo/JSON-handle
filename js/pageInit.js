@@ -89,12 +89,9 @@ JH.request({}).create(null, 'getIni', {succeed : function (oResp) {
 			alert(sJson);
 		};
 
-
 		_init.apply(_pub, arguments);
 		return _pub;
 	};
-
-
 
 	return _pub_static(oResp.data);
 

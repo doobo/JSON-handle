@@ -2,11 +2,6 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 
 		var _interface = [];
 
-
-
-
-
-
 		var _pri_static = {
 			langOut : function (key) {},
 			// _pri.oLang.getStr('msg_1')
@@ -14,12 +9,9 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 			langPack : {}
 		};
 
-
-
 		var _pro_static = {
 
 		};
-
 
 	var _pub_static = function (sJson) {
 		var _checkArgs, _parseDOM, _init, _uiEvt, _custEvt, _airEvt, _main, _this = this, _args = arguments, _pri = {}, _pro = {}, _pub = {__varyContext_:function (pro, pub) {_pro = pro;_pub = pub;}}, _mod, _base, _parent;
@@ -45,7 +37,6 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 				return _pub_static.oIni.jsonEngine === 'JH-JSON';
 				// return !~location.href.indexOf('chrome-extension:');
 			};
-
 
 			return _fun;
 
@@ -224,6 +215,7 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 				enterInputTips : JH.e('#enterInputTips'),
 				jsObjEnterOk : JH.e('#jsObjEnterOk'),
 				copyValue : JH.e('#copyValue'),
+                copyKey : JH.e('#copyKey'),
 				copyTips : JH.e('#copy-tips'),
 				rcmd : JH.e('#rcmd'),
 				optBtn : JH.e('#optBtn'),
@@ -239,6 +231,7 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 
 		_uiEvt = function () {
 			$('#saveBtn').on('click', _pri.uiEvtCallback.clickSaveBtn);
+			$('#saveAllBtn').on('click', _pri.uiEvtCallback.saveAllBtn);
 			$('#showIco').on('click', _pri.uiEvtCallback.clickShowIco);
 			$('#icoAsFolder').on('click', _pri.uiEvtCallback.clickIcoAsFolder);
 			$('#expandAll').on('click', _pri.uiEvtCallback.clickExpandAll);
@@ -255,6 +248,7 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 			$(_pri.node['minBtn']).on('click', _pri.uiEvtCallback.clickMinBtn);
 			$(_pri.node['jsObjEnterOk']).on('click', _pri.uiEvtCallback.jsObjEnterOkClick);
 			$(_pri.node['copyValue']).on('click', _pri.uiEvtCallback.clickCopyValue);
+			$(_pri.node['copyKey']).on('click', _pri.uiEvtCallback.clickCopyKey);
 			$(_pri.node['rcmd']).on('click', _pri.uiEvtCallback.clickRcmd);
 			$(_pri.node['closeAd']).on('click', _pri.uiEvtCallback.clickCloseAd);
 			$(_pri.node['optBtn']).on('click', _pri.uiEvtCallback.clickOptBtn);
@@ -356,6 +350,12 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
 					eV.select();
 					document.execCommand('copy');
 					$(eV).remove();
+                    $('#showValue').select();
+				},
+				clickCopyKey : function () {
+					var eV = $('#showKey');
+					eV.select();
+					document.execCommand('copy');
 				},
 				clickGotoCur : function () {
 					var eCurr = _pro.oTreeNav.gotoCurrElm();
@@ -528,6 +528,29 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
                         $('#showValue').css('color', 'red');
                         _pri.showErrorTips(_pri.sTempShowValue);
 					}
+                    if(!_pri.hasError) {
+                        $('#errorTips, #sigh').hide();
+                    }else{
+                        $('#errorTips, #sigh').show();
+                    }
+                },
+                saveAllBtn : function () {
+					/*获取所有数据,并去掉空格*/
+                    _pro.oTreeNav.build(_pro.oTreeNav.getData());
+                    _pri.hasError = false;
+                    try {
+                        var sTxt = _pri.filterStrFormat($('#showValue').val());
+                        oResult = JSON5.parse(sTxt);
+                        $('#showValue').val(JSON.stringify(oResult));
+                        _saveAll(JSON.stringify(oResult));
+                    } catch (e) {
+                        _pri.hasError = true;
+                        $('#msgBox').html(_pri.oLang.getStr('msg_2'));
+                        _pri.hasError = false;
+                        _pri.sTempShowValue = _pri.node['showValue'].value;
+                        $('#showValue').css('color', 'red');
+                        _pri.showErrorTips(_pri.sTempShowValue);
+                    }
                     if(!_pri.hasError) {
                         $('#errorTips, #sigh').hide();
                     }else{

@@ -84,6 +84,7 @@ JH.request = JH.newFun(function (JH) {
 						});
 						break;
 					case 'setIni':
+						/*先执行getIni,再setIni*/
 						oRe = buildSend(function (oRequestData, fResponse) {
 							chrome.extension.sendRequest({
 								cmd:'setIni'
@@ -113,9 +114,9 @@ JH.request = JH.newFun(function (JH) {
 									"showImg": true,
 									"hideAdList": true,
 									"showImgMode": 'hover',
-									"openJhMode": 'win',
-									"showArrLeng": false,
-									"showLengthMode": 'array',
+									"openJhMode": 'tab',
+									"showArrLeng": true,//显示数组长度
+									"showLengthMode": 'array',//objectArray,array
 									"saveKeyStatus": true,
 									"minimalism": true,
 									"miniTime": 'tooLarge',
@@ -139,6 +140,7 @@ JH.request = JH.newFun(function (JH) {
 									data : response
 								};
 								fResponse(oData);
+								typeof _init === 'function' && _init();
 							});
 						});
 						break;
