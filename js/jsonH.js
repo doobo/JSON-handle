@@ -536,13 +536,13 @@ JH.mod.add(['jsonH.nav', 'listenResizeWin', 'ad', 'lang'], 'jsonH', function (mo
                 },
                 saveAllBtn : function () {
 					/*获取所有数据,并去掉空格*/
-                    _pro.oTreeNav.build(_pro.oTreeNav.getData());
+                    $('#saveBtn').click();
                     _pri.hasError = false;
                     try {
-                        var sTxt = _pri.filterStrFormat($('#showValue').val());
-                        oResult = JSON5.parse(sTxt);
-                        $('#showValue').val(JSON.stringify(oResult));
-                        _saveAll(JSON.stringify(oResult));
+                        JSON5.parse(_pri.filterStrFormat($('#showValue').val()));
+                        _pro.oTreeNav.build(_pro.oTreeNav.getData());
+                        $('#showValue').val(JSON.stringify(_pro.oTreeNav.getData()));
+                        _saveAll(JSON.stringify(_pro.oTreeNav.getData()));
                     } catch (e) {
                         _pri.hasError = true;
                         $('#msgBox').html(_pri.oLang.getStr('msg_2'));
