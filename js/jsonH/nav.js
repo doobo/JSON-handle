@@ -8,13 +8,13 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 
 
 		var _pri_static = {
-
+			
 		};
 
 
 
 		var _pro_static = {
-
+			
 		};
 
 
@@ -38,19 +38,16 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 
 		JH.mergePropertyFrom(_pri, {
 
-
+			
 			"encodeToXMLchar" : function (sValue) {
 				return sValue.replace(/\&/g,'&amp;').replace(/\</g,'&lt;').replace(/\>/g,'&gt;').replace(/\"/g,'&quot;');
 			},
 			"parsePathByElm" : function (eBlock) {
-				if (eBlock.nodePath) {
-					return eBlock.nodePath;
-				}
 				var aPath = [eBlock];
 				$(eBlock).parents('.elmBlock').each(function (sKey, eB) {
 					aPath.push(eB);
 				});
-
+				
 				var sPath = '';
 				aPath = aPath.reverse();
 				var aPathObj = [];
@@ -141,14 +138,14 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 				var oPath = _pri.parsePathByElm(eBlock);
 				$('#showPath').val(oPath);
 				$('#showPath').attr('parentPath', oPath.sParent);
-
+				
 				_pri.hideLink();
 
 				var sTxt ;
 				if(typeof eBlock.oData === 'string') {
 					sTxt = _pri.filterStringValue(eBlock.oData);
 				}else{
-					sTxt = JSON5.stringify(eBlock.oData, null, 4);
+					sTxt = _pub.JSON.stringify(eBlock.oData, null, 4);
 				}
 				$('#showValue')
 					.val(sTxt)
@@ -173,14 +170,14 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 			"outElmCallback" : function (eBlock) {
 				$('#pathTips').html('');
 
-
+				
 			},
-			"changeFlodCallback" : function (b) {_pub.changeFlodCallback && _pub.changeFlodCallback(b)},
+			"changeFlodCallback" : function () {_pub.changeFlodCallback && _pub.changeFlodCallback()},
 			"drawElmCallback" : function (eBlock) {
 				_parent._pro.drawElmCallback(eBlock);
 				$(eBlock).attr('nodePath', _pri.parsePathByElm(eBlock));
 			}
-
+			
 
 		});
 
@@ -191,7 +188,7 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 			},
 			"destroy" : function(){
 				if(_pub) {
-
+					
 					_pri = _pro = _pub = null;
 				}
 			}
@@ -203,12 +200,12 @@ JH.mod.add(['treeNav'], 'jsonH.nav', function (modName, JH, $$) {
 
 
 		return _pub;
-
+		
 	};
 
 	return JH.mergePropertyFrom(_pub_static, {
 
-
+		
 
 	});
 });

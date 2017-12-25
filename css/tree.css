@@ -22,17 +22,19 @@
 .treeNav .elmBlock .row {background:none no-repeat 0 0;}
 .treeNav .folder>.row {background-image:url(treePic/folder.png);}
 
-.treeNav .elmList>li:last-child,
+.treeNav .last, 
 .treeNav .root{background-image:none;}
-.treeNav .elmList>li.folder:last-child>.row {background-image:url(treePic/folderLast.png);}
-.treeNav .elmList>li.node:last-child>.row,
-.treeNav .empty.elmBlock>li:last-child>.row {background-image:url(treePic/nodeLast.png);}
+.treeNav .last.folder>.row {background-image:url(treePic/folderLast.png);}
+.treeNav .last.node>.row, 
+.treeNav .empty.elmBlock.last>.row {background-image:url(treePic/nodeLast.png);}
 
 .treeNav .open>.row {background-image:url(treePic/open.png);}
-.treeNav .elmList>li.open:last-child>.row {background-image:url(treePic/openLast.png);}
+.treeNav .open.last>.row {background-image:url(treePic/openLast.png);}
 .treeNav .open.root>.row {background-image:url(treePic/open.png);}
 
 .treeNav .empty>.row {background-image:url(treePic/node.png);}
-.treeNav .elmList>li.node:last-child>.row {background-image:url(treePic/nodeLast.png);}
+.treeNav .last.node>.row {background-image:url(treePic/nodeLast.png);}
 
 .treeNav .node .row {margin:0;white-space:nowrap;background:url(treePic/node.png) no-repeat 0 0;cursor:default;}
+
+

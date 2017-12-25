@@ -26,16 +26,16 @@ if(!JH) {var JH;(function () {
 	JH = $ = {
 		"__ver_" : '1.2.0.2',
 		/**
-		* 创建一个函数
+		* 创建一个函数 
 			* @author gaoyuan
 			* @name newFun
 			* @memberOf JH
 			* @function
 			* @return {Function} 返回一个函数
-			*
+			* 
 			* @param fn {Function} 函数构造逻辑
 
-			* @example
+			* @example 
 			<pre>
 				var f = JH.newFun(function ($) {
 					var _fun = function (a) {
@@ -81,14 +81,14 @@ if(!JH) {var JH;(function () {
 		},
 
 		/**
-		* 遍历数组
+		* 遍历数组 
 			* @author gaoyuan
-			*
+			* 
 			* @name forEach
 			* @param aE {Array} 要遍历的数组
 			* @param fnF {Function} 遍历时执行的操作函数
 			* @param thisArg {Object} fnF的this指向此对象，没有指向window
-			* @example
+			* @example 
 			<pre>
 
 				JH.forEach(a, function (oE) {
@@ -139,14 +139,14 @@ if(!JH) {var JH;(function () {
 			return aE;
 		},
 		/**
-		* 遍历对象
+		* 遍历对象 
 			* @author gaoyuan
-			*
+			* 
 			* @name forIn
 			* @param array {Array} 要遍历的数组
 			* @param function {Function} 遍历时执行的操作函数
 			* @param boolean 是否只遍历自有属性
-			* @example
+			* @example 
 			<pre>
 
 				JH.forIn(a, function (oE) {
@@ -167,7 +167,7 @@ if(!JH) {var JH;(function () {
 		"forInOwn" : function (obj, fnF, thisArg) {
 			return forInAct(obj, fnF, true, thisArg);
 		},
-
+		
 		"throwLine" : function (sMsg, noThrow) {
 			var err;
 			err = new Error(sMsg);
@@ -194,16 +194,16 @@ if(!JH) {var JH;(function () {
 		},
 
 		/**
-		* 按w3c方式注册事件
+		* 按w3c方式注册事件 
 			* @author gaoyuan
-			*
+			* 
 			* @return {Function} 注册到事件监听的函数引用
-			*
+			* 
 			* @param obj {htmlElement} 注册事件的元素
 			* @param type {String} 事件名称  注意：没有“on”前缀  正确写法为 ‘click’，‘mouse out’
 			* @param fn {Function} 事件要响应的函数
-			*
-			* @example
+			* 
+			* @example 
 			<pre>
 			//给id为‘button1’的元素添加一个click事件监听，事件触发时输出元素的id值
 			var fff = JH.addEvent(JH.$('#button1'),'click',function () {
@@ -227,14 +227,14 @@ if(!JH) {var JH;(function () {
 		},
 
 		/**
-		* 按w3c方式注销事件
+		* 按w3c方式注销事件 
 			* @author gaoyuan
-			*
+			* 
 			* @param obj {htmlElement} 注销事件的元素
 			* @param type {String} 事件名称
 			* @param fn {Function} 事件要注销的函数
-			*
-			* @example
+			* 
+			* @example 
 			<pre>
 			//给id为‘button1’的元素添加一个click事件监听，事件触发时输出元素的id值
 			var fff = JH.addEvent(JH.$('#button1'),'click',function () {
@@ -282,7 +282,7 @@ if(!JH) {var JH;(function () {
 					current[pack] = oValue;
 				}
 			}
-
+			
 		},
 
 		"getFrom" : function (sPath, oRoot) {
@@ -388,7 +388,7 @@ if(!JH) {var JH;(function () {
 					}
 				});
 
-
+				
 			});
 		},
 
@@ -430,7 +430,7 @@ if(!JH) {var JH;(function () {
 			if(sHasInterfaceError) {
 				throw new Error('模块' + _class.__modInfo_.modName + '定义时缺少' + sHasInterfaceError);
 			}
-
+			
 
 			pub.constructor = _class;
 
@@ -500,7 +500,7 @@ if(!JH) {var JH;(function () {
 			return (s.match(/\{"(.+)"\:true\}/)[1]).replace(/\'/g, "\\'");
 		},
 
-
+		
 		"parseJsonPath" : function(s) {
 			var aPath = [];
 			var rF = /^\.?(.+?)(?=[\.\[]|$)/;
@@ -523,19 +523,19 @@ if(!JH) {var JH;(function () {
 			}
 
 			return aPath;
-
+			
 		}
 
 	};
 
 	/**
-	* 数据绑定
-		*
-		*
+	* 数据绑定 
+		* 
+		* 
 		* @return {type} returnDescription
-		*
+		* 
 		* @param agr {type} returnParam
-		* @example
+		* @example 
 		<pre>
 			// 创建obj 的数据
 			$.data.set(obj);
@@ -681,7 +681,7 @@ if(!JH) {var JH;(function () {
 	var eventObjList = {};
 	$["event"] = {
 		"destroy" : function () {
-
+			
 		},
 		"buildEvent" : function (obj) {
 			if($.data(obj, 'event')) {
@@ -749,7 +749,7 @@ if(!JH) {var JH;(function () {
 					$.data.del(obj, 'event');
 					delete eventObjList[$.data.getId(obj)];
 				}
-
+				
 			};
 
 			return custEvent;
@@ -773,7 +773,7 @@ if(!JH) {var JH;(function () {
 					*		this === oComp2;
 					* @param {Object} oAddContextData
 					* @example
-
+						
 					*/
 				'add' : function (objListenTo, sEventType, fnCallback, oAddContextData) {
 					var sUUID = $.data.getId(objListenTo);
@@ -790,7 +790,7 @@ if(!JH) {var JH;(function () {
 						})) {
 							abjListenToList.push(objListenTo);
 						}
-
+						
 					}
 					return this;
 				},
@@ -850,7 +850,7 @@ if(!JH) {var JH;(function () {
 	var oChannelList = {};
 	$["air"] = {
 		"destroy" : function () {
-
+			
 		},
 		"buildAir" : function (obj) {
 			var oListener = $.event.buildListener(obj);
@@ -875,7 +875,7 @@ if(!JH) {var JH;(function () {
 					oListener.remove(oChannel, sType, fnCallback);
 					return this;
 				},
-				'clear' : function (oChannel, sType) {
+				'clear' : function (oChannel, sType) {debugger;
 					if(!oChannel) {
 						oListener.destroy();
 					}else{
@@ -927,10 +927,10 @@ if(!JH) {var JH;(function () {
 
 	$["request"] = {
 		"buildRequest" : function (obj) {
-
+			
 		},
 		"register" : function (oInit) {
-
+			
 		}
 	};
 
@@ -938,10 +938,3 @@ if(!JH) {var JH;(function () {
 }());}
 
 
-window.timing = function (s, fn) {
-	s += '_' + (Math.random() + '').slice(-10);
-	console.time(s);
-	fn(function () {
-		console.timeEnd(s);
-	});
-}

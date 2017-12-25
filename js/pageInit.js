@@ -46,9 +46,6 @@ JH.request({}).create(null, 'getIni', {succeed : function (oResp) {
 		};
 		
 		_pri["startJsonH"] = function (sJson) {
-			if(_pri.oIni.fontUse) {
-				$('head').append('<style type="text/css"> body,  button,  input,  textarea {font-family:'+_pri.oIni.fontUse+';}</style>');
-			}
 			var oJH = JH.md.jsonH(sJson);
 			JH.e('#enterValue').select();
 
@@ -89,9 +86,12 @@ JH.request({}).create(null, 'getIni', {succeed : function (oResp) {
 			alert(sJson);
 		};
 
+
 		_init.apply(_pub, arguments);
 		return _pub;
 	};
+
+
 
 	return _pub_static(oResp.data);
 

@@ -4,16 +4,16 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 
 	var _pub_static = function (sId) {
 		var _checkArgs, _parseDOM, _init, _uiEvt, _custEvt, _airEvt, _main, _this = this, _args = arguments, _pri = {}, _pro = {}, _pub = {__varyContext_:function (pro, pub) {_pro = pro;_pub = pub;}}, _mod, _base, _parent;
-
+		
 
 
 		_main = function () {
 			_pub = JH.mod.init(_pub_static, _this, _pro, _pub, _pro_static, _interface).pub;
-			JSON5.compatible = true;
+
 			_pub.JSON = $$.JSON();
 			_pri.level = [0];
 			_pri.event = JH.event.buildEvent(_pub);
-
+			
 
 		};
 
@@ -31,7 +31,7 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 		_parseDOM = function () {
 
 			_pri.checkCur();
-
+			
 		};
 
 
@@ -57,7 +57,7 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 
 
 		_airEvt = function () {
-
+			
 		};
 
 
@@ -122,63 +122,15 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 				_pri.event.fire('clickElm', eBlock);
 
 			},
-			"drawElmFunByHtml" : function (value, key) {
-				return _pri.getDrawElmHtml(value, key, this);
-
-			},
-			"parsePath" : function (aPath) {
-				aPath = [].concat(aPath);
-
-				var sPath = '';
-				var aPathObj = [];
-				JH.forEach(aPath, function (o, i) {//debugger;
-					var sKey = o + '';
-					if(sKey.match(/^[a-zA-Z_]\w*$/)) {
-
-						aPathObj.push({type:'point', value:sKey});
-					}else if(sKey.match(/^\d+$/)) {
-
-						aPathObj.push({type:'bracketNumber', value:sKey});
-					}else{
-
-						aPathObj.push({type:'bracket', value:sKey});
-					}
-				});
-				var mergePath = function (aPathObj) {
-					var sPath = '';
-					JH.forEach(aPathObj, function (o) {
-						if(o.type === 'point') {
-							sPath += '.' + o.value;
-						}else if(o.type === 'bracketNumber') {
-							sPath += '[' + o.value + ']';
-						}else{
-							sPath += '["' + o.value + '"]';
-						}
-					});
-					return sPath;
-				};
-				var sPath = mergePath(aPathObj).slice(1);
-				aPathObj.pop();
-				return {
-					sParent : mergePath(aPathObj).slice(1),
-					toString : function () {
-						return sPath;
-					},
-					v : sPath
-				};
-			},
-			"elmBlockHash":{},
-			"nodePathCache":[],
-			"getDrawElmHtml" : function (oData, sKey, targetBox) {//debugger;
-				sKey = (sKey === undefined ? 'JSON' : sKey);
-				_pri.nodePathCache.push(sKey);
-				var sType, nextTarget = {}, elmBlock = {};
+			"drawElm" : function (oData, sKey, targetBox) {//debugger;
+				var sType, nextTarget, elmBlock;
 				oData = typeof oData === 'undefined' ? null : oData;
-				targetBox = targetBox || {};
+				targetBox = targetBox || _pri.documentFragment;
+				sKey = (sKey === undefined ? 'JSON' : sKey);
 				_pri.level[_pri.level.length - 1] = _pri.level[_pri.level.length - 1] + 1;
 				if(oData instanceof Array) {
 					sType = 'array';
-				}else if({}.toString.call(oData)  === '[object Number]') {
+				}else if(typeof oData === 'number') {
 					sType = 'number';
 				}else if(typeof oData === 'string') {
 					sType = 'string';
@@ -189,17 +141,21 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 				}else{
 					sType = 'object';
 				}
-
+				
 				var sLevel = _pri.level.slice(0).join('_');
+
 				if(targetBox.tagName && targetBox.tagName === 'UL') {
-					elmBlock.tagName = ('li');
+					elmBlock = document.createElement('li');
 				}else{
-					elmBlock.tagName = ('div');
+					elmBlock = document.createElement('div');
 				}
 				elmBlock.className = 'elmBlock ' + _pro.icoConfig[sType].className;
 				elmBlock.id = sId.slice(1) + '_l'+sLevel.slice(2);
 				var showID = '', sValue = '';
-
+				//showID = ' | ' + elmBlock.id;
+				//debugger;
+				sValue = _pub.JSON.stringify(oData, null, 4);
+				sValue = _pri.encodeToXMLchar(sValue);
 				var sElmKeyType = 'object-key';
 				if(targetBox.elmType === 'array') {
 					sElmKeyType = 'array-key';
@@ -210,162 +166,48 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 				}else if(sType === 'object') {
 					leng = Object.keys(oData).length;
 				}
-				var sImg = '', sHasImgClass = '';
-				if(_pub.showAllImg) {
-					if(_pri.isImgUrl(oData)) {
-						sImg = '<br /><img src="'+_pri.encodeToXMLchar(sV.slice(1, -1))+'" />';
-						elmBlock.className += ' imgUrl';
-						sHasImgClass = 'has-img';
-					}
-				}
-
+				var sHTML = [
+					'<div class="row">',
+						'<img class="ico" src="css/treePic/' + _pro.icoConfig[sType].icoName + '" alt="" />',
+						'<div class="elmBox">',
+							'<span class="elmSpan"><span class="elm '+sElmKeyType+'" title="' + sValue + '">' + sKey + showID + '</span></span>',
+							leng > -1 ? '<span class="array-leng">'+leng+'</span>' : '',
+						'</div>',
+					'</div>'
+				].join('');
+				
+				JH.elementHtml(elmBlock, sHTML);
 				if(sType === 'array' || sType === 'object') {
-					nextTarget.tagName = 'UL';
-					nextTarget.html = '<ul class="elmList">';
-					nextTarget.htmlEnd = '</ul>';
+					nextTarget = document.createElement('ul');
+					nextTarget.className = 'elmList';
+					elmBlock.appendChild(nextTarget);
 				}
 
-				var nextTargetHtml = [];
+				targetBox.appendChild(elmBlock);
+				elmBlock.oData = oData;
+				elmBlock.sKeyName = sKey;
+				elmBlock.sType = sType;
+				if(_pub.showAllImg) {
+					_pro.drawElmCallback(elmBlock, 1);
+					$('#jsonNav').addClass('hasLoadedValueImg');
+				}else{
+					_pro.drawElmCallback(elmBlock);
+				}
+				
+				_pri.event.fire('drawElm', elmBlock);
 
 				if(sType === 'array') {
 					_pri.level.push(0);
 					nextTarget.elmType = 'array';
-					JH.forEach(oData, function (v,k) {
-						nextTargetHtml.push(_pri.drawElmFunByHtml.bind(nextTarget)(v,k));
-					});
+					JH.forEach(oData, _pri.drawElmFun, nextTarget);
 					_pri.level.pop();
 				}else if(sType === 'object') {
 					_pri.level.push(0);
-					var aKey = Object.keys(oData);
-					if (_pub.oIni.sortKey) {
-						aKey = aKey.sort();
-					}
-					JH.forEach(aKey, function (k) {var v = oData[k];
-						nextTargetHtml.push(_pri.drawElmFunByHtml.bind(nextTarget)(v,k));
-					});
+					JH.forIn(oData, _pri.drawElmFun, nextTarget);
 					_pri.level.pop();
 				}
-				nextTargetHtml = nextTargetHtml.join('');
-
-				elmBlock.oData = oData;
-				elmBlock.sKeyName = sKey;
-				elmBlock.sType = sType;
-				elmBlock.nodePath = _pri.parsePath(_pri.nodePathCache);
-				_pri.elmBlockHash[elmBlock.id] = elmBlock;
-
-				var sHTML = [
-					'<'+elmBlock.tagName+' nodePath="'+elmBlock.nodePath+'" class="'+elmBlock.className+'" id="'+elmBlock.id+'">',
-					'<div class="row">',
-						(_pub.oIni.showIco ? '<img class="ico" src="css/treePic/' + _pro.icoConfig[sType].icoName + '" alt="" />' : ''),
-						'<div class="elmBox">',
-							'<span class="elmSpan">',
-								'<span class="elm '+sElmKeyType+'"title="' + sValue + '">' + sKey + showID + '</span>',
-								((sType !== 'object' && sType !== 'array') ?
-									'<span class="value '+sHasImgClass+'">' + _pri.encodeToXMLchar(oData ? oData.toString() : oData + '') + sImg +'</span>'
-									: ''
-								),
-							'</span>',
-							leng > -1 ? '<span class="array-leng">'+leng+'</span>' : '',
-						'</div>',
-					'</div>',
-					(nextTarget.html ? nextTarget.html + nextTargetHtml + nextTarget.htmlEnd : ''),
-					'</'+elmBlock.tagName+'>',
-				].join('');
-				_pri.nodePathCache.pop();
-				return sHTML;
+				
 			},
-			// "drawElm" : function (oData, sKey, targetBox) {//debugger;
-			// 	var sType, nextTarget, elmBlock;
-			// 	oData = typeof oData === 'undefined' ? null : oData;
-			// 	targetBox = targetBox || _pri.documentFragment;
-			// 	sKey = (sKey === undefined ? 'JSON' : sKey);
-			// 	_pri.level[_pri.level.length - 1] = _pri.level[_pri.level.length - 1] + 1;
-			// 	if(oData instanceof Array) {
-			// 		sType = 'array';
-			// 	}else if({}.toString.call(oData)  === '[object Number]') {
-			// 		sType = 'number';
-			// 	}else if(typeof oData === 'string') {
-			// 		sType = 'string';
-			// 	}else if(typeof oData === 'boolean') {
-			// 		sType = 'boolean';
-			// 	}else if(oData === null) {
-			// 		sType = 'null';
-			// 	}else{
-			// 		sType = 'object';
-			// 	}
-
-			// 	var sLevel = _pri.level.slice(0).join('_');
-
-			// 	if(targetBox.tagName && targetBox.tagName === 'UL') {
-			// 		elmBlock = document.createElement('li');
-			// 	}else{
-			// 		elmBlock = document.createElement('div');
-			// 	}
-			// 	elmBlock.className = 'elmBlock ' + _pro.icoConfig[sType].className;
-			// 	elmBlock.id = sId.slice(1) + '_l'+sLevel.slice(2);
-			// 	var showID = '', sValue = '';
-			// 	//showID = ' | ' + elmBlock.id;
-			// 	//debugger;
-			// 	// sValue = JSON5.stringify(oData, null, 4);
-			// 	// sValue = _pri.encodeToXMLchar(sValue);
-			// 	var sElmKeyType = 'object-key';
-			// 	if(targetBox.elmType === 'array') {
-			// 		sElmKeyType = 'array-key';
-			// 	}
-			// 	var leng = -1;
-			// 	if(sType === 'array') {
-			// 		leng = oData.length;
-			// 	}else if(sType === 'object') {
-			// 		leng = Object.keys(oData).length;
-			// 	}
-			// 	var sHTML = [
-			// 		'<div class="row">',
-			// 			'<img class="ico" src="css/treePic/' + _pro.icoConfig[sType].icoName + '" alt="" />',
-			// 			'<div class="elmBox">',
-			// 				'<span class="elmSpan">',
-			// 					'<span class="elm '+sElmKeyType+'"title="' + sValue + '">' + sKey + showID + '</span>',
-			// 					((sType !== 'object' && sType !== 'array') ?
-			// 						'<span class="value">' + _pri.encodeToXMLchar(oData ? oData.toString() : oData + '') +'</span>'
-			// 						: ''
-			// 					),
-			// 				'</span>',
-			// 				leng > -1 ? '<span class="array-leng">'+leng+'</span>' : '',
-			// 			'</div>',
-			// 		'</div>'
-			// 	].join('');
-
-			// 	JH.elementHtml(elmBlock, sHTML);
-			// 	if(sType === 'array' || sType === 'object') {
-			// 		nextTarget = document.createElement('ul');
-			// 		nextTarget.className = 'elmList';
-			// 		elmBlock.appendChild(nextTarget);
-			// 	}
-
-			// 	targetBox.appendChild(elmBlock);
-			// 	elmBlock.oData = oData;
-			// 	elmBlock.sKeyName = sKey;
-			// 	elmBlock.sType = sType;
-			// 	if(_pub.showAllImg) {
-			// 		_pro.drawElmCallback(elmBlock, 1);
-			// 		$('#jsonNav').addClass('hasLoadedValueImg');
-			// 	}else{
-			// 		_pro.drawElmCallback(elmBlock);
-			// 	}
-
-			// 	_pri.event.fire('drawElm', elmBlock);
-
-			// 	if(sType === 'array') {
-			// 		_pri.level.push(0);
-			// 		nextTarget.elmType = 'array';
-			// 		JH.forEach(oData, _pri.drawElmFun, nextTarget);
-			// 		_pri.level.pop();
-			// 	}else if(sType === 'object') {
-			// 		_pri.level.push(0);
-			// 		JH.forIn(oData, _pri.drawElmFun, nextTarget);
-			// 		_pri.level.pop();
-			// 	}
-
-			// },
 			"drawElmFun" : function (value, key) {
 				_pri.drawElm(value, key, this);
 
@@ -384,18 +226,16 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 				if(bShowImg && _pri.isImgUrl(sV)) {
 					sImg = '<br /><img src="'+_pri.encodeToXMLchar(sV.slice(1, -1))+'" />';
 					$(eBlock).addClass('imgUrl');
+				}
+				if(sImg) {
 					sHasImgClass = 'has-img';
 				}
-
 				if($(eBlock).hasClass('node')) {
-					$('.value', eBlock).addClass(sHasImgClass).append(sImg);
+					$('.elmSpan', eBlock).append('<span class="value '+sHasImgClass+'">' + _pri.encodeToXMLchar(sV) + sImg +'</span>');
 				}
 			},
 
 			"isImgUrl" : function (sV) {
-				if ({}.toString.call(sV) !== '[object String]') {
-					return false;
-				}
 				sV = sV.slice(1, -1);
 				var bUrl = false;
 				if(/^(http\:|https\:|file\:).+/.test(sV)) {
@@ -445,26 +285,18 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 				}
 			},
 			"fixTreeView" : function (eTree) {
-				// $('.elmList', eTree).each(function (iIndex, eUl) {
-				// 	var eLastChild = $('>li:last-child', eUl)[0];
-				// 	if(eLastChild) {
-				// 		$(eLastChild).addClass('last');
-				// 	}
-				// 	if(!$('>*', eUl).length) {
-				// 		$(eUl).parent().addClass('empty');
-				// 	}
-				// });
-				$('.elmBlock', eTree).each(function (iIndex, eDiv) {
-					if (eDiv.tagName === 'DIV') {
-						$(eDiv).addClass('root');
+				$('.elmList', eTree).each(function (iIndex, eUl) {
+					var eLastChild = $('>li:last-child', eUl).eq(0);
+					if(eLastChild) {
+						eLastChild.addClass('last');
 					}
-					var oHash = _pri.elmBlockHash[eDiv.id];
-					if (oHash) {
-						eDiv.oData = oHash.oData;
-						eDiv.sKeyName = oHash.sKeyName;
-						eDiv.sType = oHash.sType;
-						eDiv.nodePath = oHash.nodePath;
+					if(!$('>*', eUl).length) {
+						$(eUl).parent().addClass('empty');
 					}
+				});
+				$('div.elmBlock', eTree).each(function (iIndex, eDiv) {
+
+					$(eDiv).addClass('root');
 				});
 			},
 			"clickElmCallback" : function (eBlock) {
@@ -472,13 +304,13 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 
 			},
 			"overElmCallback" : function (eBlock) {
-
+				
 			},
 			"outElmCallback" : function (eBlock) {
-
+				
 			},
 			"changeFlodCallback" : function (eBlock) {
-
+				
 			},
 			"drawElmCallback" : function (eBlock) {
 				_pri.drawElmCallback(eBlock);
@@ -494,24 +326,18 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 
 				JH.elementHtml(JH.e(sId), '');
 				JH.elementHtml(_pri.documentFragment, '');
-				// JH.e(sId).setAttribute('data-json', JSON.stringify(oData, null, 4));
+				JH.e(sId).setAttribute('data-json', JSON.stringify(oData, null, 4));
 				_pro.data = oData;
-				// _pri.drawElm(oData, sKey);
-				var sss = _pri.getDrawElmHtml(oData, sKey);
-				if(_pub.showAllImg) {
-					$('#jsonNav').addClass('hasLoadedValueImg');
-				}
-				_pri.documentFragment.innerHTML = sss;
+				_pri.drawElm(oData, sKey);
 				_pro.fixTreeView(_pri.documentFragment);
+
 				//debugger;
 				JH.e(sId).appendChild(_pri.documentFragment);
 				_pub.expandCur('jsonNav_l');
-				setTimeout(function () {
-					_pub.buildCallback();
-				});
+				_pub.buildCallback();
 			},
 			"buildCallback" : function () {
-
+				
 			},
 			"expandCur" : function (sId) {
 				sId = sId || '';
@@ -527,24 +353,19 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 						$(e).parent().addClass('open');
 					});
 				}
-				_pro.changeFlodCallback(sId === '#jsonNav_l');
+				_pro.changeFlodCallback();
 				//location.hash = '';
 				//location.hash = eCur.id;
-				setTimeout(function () {
-					$(document).scrollTop($(eCur).offset().top - 100);
-				});
+
+				$(document).scrollTop($(eCur).offset().top - 100);
 			},
 			"getCurrElm" : function () {
 				return _pri.eCur;
 			},
 			"gotoCurrElm" : function () {
 				var eCur = _pub.getCurrElm();
-				var iTop = $(eCur).offset().top;
-				var iScroll = $('#jsonNav').scrollTop();
-				iTop = iScroll + iTop - 100;
 				if(eCur) {
-					$(document).scrollTop(iTop);
-					$('#jsonNav').scrollTop(iTop);
+					$(document).scrollTop($(eCur).offset().top - 100);
 				}
 			},
 			"expandAll" : function () {
@@ -570,7 +391,6 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 			"checkValueImg" : function (eElmValue) {
 				var eBlock = $(eElmValue).parents('.elmBlock')[0];
 				var sV = _pub.JSON.stringify(eBlock.oData);
-				$('>.row .elmSpan', eBlock).attr('title', sV);
 				if(_pri.isImgUrl(sV)) {
 					sImgHtml = '<img src="'+_pri.encodeToXMLchar(sV.slice(1, -1))+'" />';
 					$(eBlock).addClass('imgUrl');
@@ -610,12 +430,12 @@ JH.mod.add(['JSON'], 'treeNav', function (modName, JH, $$) {
 
 
 		return _pub;
-
+		
 	};
 
 	return JH.mergePropertyFrom(_pub_static, {
 
-
+		
 
 	});
 });
