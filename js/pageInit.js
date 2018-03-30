@@ -1,3 +1,4 @@
+var chrome = chrome || {};
 chrome.extension = chrome.extension || {
 	sendRequest : function (o, f) {
 		config.mode = '';
